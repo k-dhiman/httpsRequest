@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Github Top Profiles with AJAX</title>
+    <style>
+        #block {
+            text-transform: capitalize;
+            font-size: 20px;
+            list-style: none;
+        }
+        #block img {
+            display: block;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 10px;       
+        }
+
+        .person-details {
+            display: flex;
+            align-items: center;
+            background-color: #eee;
+            margin-bottom: 10px;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+        }
+        
+    </style>
+
+</head>
+<body>
+    <button id="btn">Get Github Top Users</button>
+
+    <div id="block">
+    </div>
+
+    <div class="overlay">
+        <img src="" alt="">
+    </div>
+
+    <script>
+        document.getElementById('btn').addEventListener('click', getRespond);
+
+        function getRespond(){
+            let xhr = new XMLHttpRequest();
+            
+            xhr.open('GET', 'https://api.github.com/users', true);
+
+            if(xhr.onprogress) {
+                document.querySelector('.overlay').style.display = 'block';
+            } else {
+                document.querySelector('.overlay').style.display = 'none';
+            }
+
+            xhr.onload = () => {
+                if(xhr.status === 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    console.log(xhr)
+                    for(var i in response) {
+                        document.getElementById('block').innerHTML += `<div class="person-details"><img src="${response[i].avatar_url}" /><p> ${response[i].login} </p></div>`;
+                    }
+                }
+            }
+
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
